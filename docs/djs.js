@@ -170,7 +170,7 @@ function __init(){
     + '<textarea class="form-control" id="__comment" value=""></textarea>'
     + '</div>'
     + '<div class="modal-footer btn-center">'
-    + '<button type="button" class="btn" data-toggle="modal" onClick="__closeCommentModal();">OK</button>'
+    + '<button type="button" class="btn btn-primary modal_button" data-dismiss="modal">OK</button>'
     + '</div>'
     + '</div>'
     + '</div>'
