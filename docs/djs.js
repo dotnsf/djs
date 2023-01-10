@@ -9,6 +9,7 @@ var __r = {
     'color_red': '赤',
     'color_blue': '青',
     'color_green': '緑',
+    'color_yellowgreen': '黄緑',
     'color_yellow': '黄',
     'color_orange': '橙',
     'color_cyan': '空色',
@@ -25,6 +26,7 @@ var __r = {
 
     'dialog_comment_title': 'コメント',
     'dialog_color_title': '色選択',
+    'dialog_qrcode_title': 'QRコード',
 
     'dummy': 'ダミー'
   },
@@ -35,6 +37,7 @@ var __r = {
     'color_red': 'Red',
     'color_blue': 'Blue',
     'color_green': 'Green',
+    'color_yellowgreen': 'YellowGreen',
     'color_yellow': 'Yellow',
     'color_orange': 'Orange',
     'color_cyan': 'Cyan',
@@ -51,6 +54,7 @@ var __r = {
 
     'dialog_comment_title': 'Comment',
     'dialog_color_title': 'Custom Color',
+    'dialog_qrcode_title': 'QR Code',
 
     'dummy': 'Dummy'
   }
@@ -92,6 +96,7 @@ function __init(){
     + '<option style="color:red;" value="red">' + __r[__OPTION.lang].color_red + '</option>'
     + '<option style="color:blue;" value="blue">' + __r[__OPTION.lang].color_blue + '</option>'
     + '<option style="color:green;" value="green">' + __r[__OPTION.lang].color_green + '</option>'
+    + '<option style="color:#88cc00;" value="#88cc00">' + __r[__OPTION.lang].color_yellowgreen + '</option>'
     + '<option style="color:yellow;" value="yellow">' + __r[__OPTION.lang].color_yellow + '</option>'
     + '<option style="color:#ffa500;" value="#ffa500">' + __r[__OPTION.lang].color_orange + '</option>'
     + '<option style="color:cyan;" value="cyan">' + __r[__OPTION.lang].color_cyan + '</option>'
@@ -129,6 +134,8 @@ function __init(){
     + '<input type="button" class="btn btn-xs btn-secondary p-0" id="__setbg_btn" value="' + __r[__OPTION.lang].btn_setbg + '" onClick="__setBG();"/>'
 
     + ( __OPTION && __OPTION.comment ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
+
+    + ( __OPTION && __OPTION.qrcode ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
 
     + '<div id="__canvas_div">'
     + '<div id="__cdiv"><canvas width="80%" height="50%" id="__mycanvas"></canvas></div>'
@@ -174,6 +181,29 @@ function __init(){
     + '</div>'
     + '</div>'
     + '</div>'
+    + '</div>'
+
+    + '<div class="modal bd-example-modal-lg fade" id="__qrcodeModal" tabindex="-1" role="dialog" aria-labbelledby="__qrcodeModal" aria-hidden="true">'
+    + '  <div class="modal-dialog modal-dialog-centered modal-lg">'
+    + '    <div class="modal-content">'
+    + '      <div class="modal-header">'
+    + '        <h4 class="modal-title" id="__qrcodeModalLabel">' + __r[__OPTION.lang].dialog_qrcode_title + '</h4>'
+    + '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+    + '          <span aria-hidden="true">&times;</span>'
+    + '        </button>'
+    + '      </div>'
+    + '      <div class="modal-body" id="__qrcodemodal-body">'
+    + '        <img id="__qrcode_img" width="90%"/>'
+    + '        <div id="__qrcode_img_" width="100%"></div>'
+    + '      </div>'
+    + '      <div class="modal-footer btn-center">'
+    + '      </div>'
+    + '    </div>'
+    + '  </div>'
+    + '</div>'
+
+    + '<div class="hide">'
+    + '  <canvas id="canvas" width="32" height="32"></canvas>'
     + '</div>';
   __THIS.html( __ui );
 
@@ -702,3 +732,160 @@ function __generateUUID(){
   return __did;
 };
 
+function __qrCode( id ){
+  var __canvas = document.getElementById( '__canvas' );
+  if( !__canvas || !__canvas.getContext ){
+    return false;
+  }
+  var __ctx = __canvas.getContext( '2d' );
+
+  //. タイトル
+  var __title = $('#__comment').val();
+
+  //. 作者
+  var __author = 'MyDoodles';
+
+  //. Town
+  var __town = 'My Town';
+
+  //. カラーパレット
+  var __color_palette = [
+    146,  //. transparent #eeeeee(#cccccc)
+    159,  //. black       #000000
+    145,  //. white       #ffffff
+    5,    //. red         #ff0000
+    86,   //. blue        #0000ff
+    95,   //. green       #00ff00
+    68,   //. yellow      #ffff00
+    122,  //. cyan        #00ffff
+    41,   //. magenta     #ff00ff
+    153,  //. gray        #808080
+    47,   //. pink        #ef8f9c
+    30,   //. beige       #ead2ad
+    59,   //. brown       #7c6035
+    111,  //. dummy
+    112   //. dummy
+  ];
+
+  //. カラーパレット変換テーブル
+  var __color_palette_table = [];
+  for( var i = 0; i < 16; i ++ ){
+    for( var j = 0; j < 9; j ++ ){
+      var __v = 16 * i + j;
+      __color_palette_table.push( __v );
+    }
+  }
+  for( var i = 0; i < 15; i ++ ){
+    var __v = 16 * i + 15;
+    __color_palette_table.push( __v );
+  }
+
+  //. 画像データ
+  var __imgdata = [];
+  var __imagedata = __ctx.getImageData( 0, 0, 32, 32 );
+  for( var i = 0; i < __imagedata.height; i ++ ){
+    for( var j = 0; j < __imagedata.width; j += 2 ){
+      var __idx = ( j + i * __imagedata.width ) * 4;
+
+  		var __r1 = __imagedata.data[__idx];
+  		var __g1 = __imagedata.data[__idx+1];
+      var __b1 = __imagedata.data[__idx+2];
+      var __a1 = __imagedata.data[__idx+3];
+      var __color_index1 = __getColorIndex( __r1, __g1, __b1, __a1 );
+
+  		var __r2 = __imagedata.data[__idx+4];
+  		var __g2 = __imagedata.data[__idx+5];
+      var __b2 = __imagedata.data[__idx+6];
+      var __a2 = __imagedata.data[__idx+7];
+      var __color_index2 = __getColorIndex( __r2, __g2, __b2, __a2 );
+
+      __idx = __color_index2 * 16 + __color_index1;
+      __imgdata.push( __idx );
+    }
+  }
+
+  if( __color_palette && __imgdata ){
+    var __data = [];
+
+    //. Title
+    var __titlearray = __str2bytearray( __title );
+    for( var i = 0; i < __titlearray.length || i < 42; i ++ ){
+      if( i < 42 ){
+        if( i < __titlearray.length ){
+          var __c = __titlearray[i];
+          __data.push( __c );
+        }else{
+          __data.push( 0 );
+        }
+      }
+    }
+
+    //. *1, *2
+    __data.push( 23 );
+    __data.push( 146 );
+
+    //. Author
+    for( var i = 0; i < __author.length || i < 9; i ++ ){
+      if( i < 9 ){
+        if( i < __author.length ){
+          var __c = __author.charCodeAt( i );
+          __data.push( __c );
+        }else{
+          __data.push( 0 );
+        }
+        __data.push( 0 );
+      }
+    }
+
+    //. *12, *13, *3, *4
+    __data.push( 1 );
+    __data.push( 0 );
+    __data.push( 216 );
+    __data.push( 144 );
+
+    //. Town
+    for( var i = 0; i < __town.length || i < 9; i ++ ){
+      if( i < 9 ){
+        if( i < __town.length ){
+          var __c = __town.charCodeAt( i );
+          __data.push( __c );
+        }else{
+          __data.push( 0 );
+        }
+        __data.push( 0 );
+      }
+    }
+
+    //. *14, *15, *5, *6
+    __data.push( 0 );
+    __data.push( 0 );
+    __data.push( 1 );
+    __data.push( 2 );
+
+    //. Color Pallete
+    for( var i = 0; i < __color_palette.length; i ++ ){
+      __data.push( __color_palette_table[__color_palette[i]-1] );
+    }
+
+    //. *7, *8, *9, *10, *11
+    __data.push( 198 );
+    __data.push( 0 );
+    __data.push( 9 );
+    __data.push( 0 );
+    __data.push( 0 );
+
+    //. Palette data
+    for( var i = 0; i < __imgdata.length; i ++ ){
+      __data.push( __imgdata[i] );
+    }
+
+    //. #23
+    var __bindata = new Uint8Array( __data );
+
+    //. どっちでやっても「QRコードの形式が正しくありません」エラー
+    var __q = new QRCode( __data );
+
+    $('#__qrcode_img_').html( __q );
+    $('#__qrcodeModal').modal();
+  }
+};
