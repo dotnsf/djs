@@ -6,8 +6,9 @@
 <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" rel="stylesheet"/>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script>
+<link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet"/>
 
-<script src="./djs.js"></script>
+<script src="https://dotnsf.github.io/djs/djs.js"></script>
 <script>
 //. プロトタイプ上書き用関数
 function submitCanvas(){
@@ -23,7 +24,7 @@ function sendImage(){
   formData.append( 'image', img );
   formData.append( 'timestamp', ( new Date() ).getTime() );
   formData.append( 'name', __OPTION.uuid );
-  formData.append( 'comment', '' );
+  formData.append( 'comment', $('#__comment').val() );
   //formData.append( 'room', '<%= room %>' );
   formData.append( 'uuid', __OPTION.uuid );
   $.ajax({
@@ -45,7 +46,7 @@ var djs = null;
 $(function(){
   //$('#djs_main').doodlejs({}).__proto__.__submitCanvas = submitCanvas;  //. 直接上書きする場合
 
-  djs = $('#djs_main').doodlejs({ lang: 'ja' });
+  djs = $('#djs_main').doodlejs({ lang: 'ja', comment: true });
   //djs.__proto__.__sendImage = sendImage;        //. sendImage を上書き
   //djs.__proto__.__submitCanvas = submitCanvas;  //. submitCanvas を上書き
 });

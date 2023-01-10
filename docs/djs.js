@@ -23,6 +23,7 @@ var __r = {
     'btn_reset': 'リセット',
     'btn_submit': '保存',
 
+    'dialog_comment_title': 'コメント',
     'dialog_color_title': '色選択',
 
     'dummy': 'ダミー'
@@ -48,6 +49,7 @@ var __r = {
     'btn_reset': 'Reset',
     'btn_submit': 'Submit',
 
+    'dialog_comment_title': 'Comment',
     'dialog_color_title': 'Custom Color',
 
     'dummy': 'Dummy'
@@ -126,6 +128,8 @@ function __init(){
 
     + '<input type="button" class="btn btn-xs btn-secondary p-0" id="__setbg_btn" value="' + __r[__OPTION.lang].btn_setbg + '" onClick="__setBG();"/>'
 
+    + ( __OPTION && __OPTION.comment ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
+
     + '<div id="__canvas_div">'
     + '<div id="__cdiv"><canvas width="80%" height="50%" id="__mycanvas"></canvas></div>'
     + '<input type="button" class="btn btn-xs" id="__undo_btn" value="<" onClick="__undo();" disabled="disabled"/>'
@@ -148,6 +152,25 @@ function __init(){
     + '</div>'
     + '<div class="modal-footer btn-center">'
     + '<button type="button" class="btn" data-toggle="modal" onClick="__closeColorModal();">OK</button>'
+    + '</div>'
+    + '</div>'
+    + '</div>'
+    + '</div>'
+
+    + '<div class="modal bd-example-modal-lg fade" id="__commentModal" tabindex="-1" role="dialog" aria-labbelledby="commentModal" aria-hidden="true">'
+    + '<div class="modal-dialog modal-dialog-centered modal-lg">'
+    + '<div class="modal-content">'
+    + '<div class="modal-header">'
+    + '<h4 class="modal-title" id="__commentModalLabel">' + __r[__OPTION.lang].dialog_comment_title + '</h4>'
+    + '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+    + '<span aria-hidden="true">&times;</span>'
+    + '</button>'
+    + '</div>'
+    + '<div class="modal-body" id="__commentmodal-body">'
+    + '<textarea class="form-control" id="__comment" value=""></textarea>'
+    + '</div>'
+    + '<div class="modal-footer btn-center">'
+    + '<button type="button" class="btn" data-toggle="modal" onClick="__closeCommentModal();">OK</button>'
     + '</div>'
     + '</div>'
     + '</div>'
