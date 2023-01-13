@@ -203,7 +203,7 @@ function __init(){
     + '</div>'
 
     + '<div class="hide">'
-    + '  <canvas id="canvas" width="32" height="32"></canvas>'
+    + '  <canvas id="__canvas" width="32" height="32"></canvas>'
     + '</div>';
   __THIS.html( __ui );
 
@@ -497,6 +497,10 @@ function __definePrototype(){
   //. プロトタイプ関数
 
   //. プロトタイプのデフォルト関数
+  __THIS.__proto__.__resized = function(){
+    __supper_resized();
+  };
+
   __THIS.__proto__.__sendImage = function(){
     //. デフォルトでは何もしない
     //console.log( '__sendImage()' );
@@ -551,7 +555,7 @@ function __getImage(){
   return __blob;
 };
 
-function __resized(){
+function __supper_resized(){
   var __browserWidth = window.innerWidth;
   var __browserHeight = window.innerHeight;
   var __canvas = document.getElementById( '__mycanvas' );
@@ -732,8 +736,8 @@ function __generateUUID(){
   return __did;
 };
 
-function __qrCode( id ){
-  var __canvas = document.getElementById( '__canvas' );
+function __qrCode( canvas_id ){
+  var __canvas = document.getElementById( canvas_id );  //. 絵が描かれている 32x32 canvas の id(__canvas)
   if( !__canvas || !__canvas.getContext ){
     return false;
   }
