@@ -479,7 +479,7 @@ function __init(){
 
   //. リサイズ時に Canvas サイズを変更する
   $(window).on( 'load resize', function(){
-    __resized();
+    __super_resized();
   });
 
   //. スクロール禁止
@@ -567,7 +567,7 @@ function __supper_resized(){
 
 function __resetCanvas( __no_reset_unredo ){
   //__init();
-  __resized();
+  __super_resized();
 
   if( !__no_reset_unredo ){
     __undos = [];
