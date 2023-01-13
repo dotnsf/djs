@@ -498,7 +498,7 @@ function __definePrototype(){
 
   //. プロトタイプのデフォルト関数
   __THIS.__proto__.__resized = function(){
-    __supper_resized();
+    __super_resized();
   };
 
   __THIS.__proto__.__sendImage = function(){
@@ -555,7 +555,7 @@ function __getImage(){
   return __blob;
 };
 
-function __supper_resized(){
+function __super_resized(){
   var __browserWidth = window.innerWidth;
   var __browserHeight = window.innerHeight;
   var __canvas = document.getElementById( '__mycanvas' );
