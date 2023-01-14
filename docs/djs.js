@@ -477,19 +477,19 @@ function __init(){
     }
   });
 
-  //. リサイズ時に Canvas サイズを変更する
-  $(window).on( 'load resize', function(){
-    __super_resized();
-  });
-
   //. スクロール禁止
   var __movefun = function( event ){
     event.preventDefault();
   }
   window.addEventListener( 'touchmove', __movefun, { passive: false } );
 
-
+  //. プロトタイプを定義
   __definePrototype();
+
+  //. リサイズ時に Canvas サイズを変更する
+  $(window).on( 'load resize', function(){
+    __super_resized();
+  });
 }
 
 
