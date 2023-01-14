@@ -489,6 +489,7 @@ function __init(){
   //. リサイズ時に Canvas サイズを変更する
   $(window).on( 'load resize', function(){
     __super_resized();
+    //__resized();  //. undefined
   });
 }
 
