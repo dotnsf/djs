@@ -1,6 +1,11 @@
 //. djs.js
 
 //. Language resources
+var __lang = window.navigator.language;
+if( __lang != 'ja' && __lang != 'en' ){
+  __lang = 'en';
+}
+
 var __r = {
   'ja': {
     'color_transparent': '透明',
@@ -77,7 +82,7 @@ $.fn.doodlejs = function( option ){
   __OPTION = option;
 
   //. lang
-  if( !__OPTION || !__OPTION.lang ){ __OPTION.lang = 'ja'; }
+  if( !__OPTION || !__OPTION.lang ){ __OPTION.lang = __lang; }
 
   //. uuid
   if( !__OPTION || !__OPTION.uuid ){ __OPTION.uuid = __generateUUID(); }
