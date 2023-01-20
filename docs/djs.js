@@ -33,6 +33,7 @@ var __r = {
     'dialog_color_title': '色選択',
     'dialog_qrcode_title': 'QRコード',
     'dialog_history_title': '履歴',
+    'dialog_extra_title': '拡張',
 
     'dummy': 'ダミー'
   },
@@ -62,6 +63,7 @@ var __r = {
     'dialog_color_title': 'Custom Color',
     'dialog_qrcode_title': 'QR Code',
     'dialog_history_title': 'History',
+    'dialog_extra_title': 'Extra',
 
     'dummy': 'Dummy'
   }
@@ -140,11 +142,13 @@ function __init(){
 
     + '<input type="button" class="btn btn-xs btn-secondary p-0" id="__setbg_btn" value="' + __r[__OPTION.lang].btn_setbg + '" onClick="__setBG();"/>'
 
-    + ( __OPTION && __OPTION.comment ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
+    //+ ( __OPTION && __OPTION.comment ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
 
-    + ( __OPTION && __OPTION.qrcode ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
+    //+ ( __OPTION && __OPTION.qrcode ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
 
-    + ( __OPTION && __OPTION.history ? '<a href="#" class="btn btn-xs btn-success p-0" data-toggle="modal" data-target="#__historyModal" id="__history_btn"><i class="fas fa-grip-horizontal"></i></a>' : '' )
+    //+ ( __OPTION && __OPTION.history ? '<a href="#" class="btn btn-xs btn-success p-0" data-toggle="modal" data-target="#__historyModal" id="__history_btn"><i class="fas fa-grip-horizontal"></i></a>' : '' )
+
+    + ( __OPTION && __OPTION.extra ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__extraModal" id="__extra_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
 
     + '<div id="__canvas_div">'
     + '<div id="__cdiv"><canvas width="80%" height="50%" id="__mycanvas"></canvas></div>'
@@ -173,6 +177,7 @@ function __init(){
     + '</div>'
     + '</div>'
 
+    /*
     + '<div class="modal bd-example-modal-lg fade" id="__commentModal" tabindex="-1" role="dialog" aria-labbelledby="commentModal" aria-hidden="true">'
     + '<div class="modal-dialog modal-dialog-centered modal-lg">'
     + '<div class="modal-content">'
@@ -227,6 +232,22 @@ function __init(){
     + '    </div>'
     + '  </div>'
     + '</div>'
+
+    + '<div class="modal bd-example-modal-lg fade" id="__extraModal" tabindex="-1" role="dialog" aria-labbelledby="extraModal" aria-hidden="true">'
+    + '  <div class="modal-dialog modal-dialog-centered modal-lg">'
+    + '    <div class="modal-content">'
+    + '      <div class="modal-header">'
+    + '        <h4 class="modal-title copy_btn" data-clipboard-text="" id="__extraModalLabel">' + __r[__OPTION.lang].dialog_extra_title + '</h4>'
+    + '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+    + '          <span aria-hidden="true">&times;</span>'
+    + '        </button>'
+    + '      </div>'
+    + '      <div class="modal-body" id="__extramodal-body">'
+    + '      </div>'
+    + '    </div>'
+    + '  </div>'
+    + '</div>'
+    */
 
     + '<div class="hide">'
     + '  <canvas id="__canvas" width="32" height="32"></canvas>'
