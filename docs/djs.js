@@ -142,12 +142,6 @@ function __init(){
 
     + '<input type="button" class="btn btn-xs btn-secondary p-0" id="__setbg_btn" value="' + __r[__OPTION.lang].btn_setbg + '" onClick="__setBG();"/>'
 
-    //+ ( __OPTION && __OPTION.comment ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
-
-    //+ ( __OPTION && __OPTION.qrcode ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__commentModal" id="__comment_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
-
-    //+ ( __OPTION && __OPTION.history ? '<a href="#" class="btn btn-xs btn-success p-0" data-toggle="modal" data-target="#__historyModal" id="__history_btn"><i class="fas fa-grip-horizontal"></i></a>' : '' )
-
     + ( __OPTION && __OPTION.extra ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__extraModal" id="__extra_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
 
     + '<div id="__canvas_div">'
@@ -176,78 +170,6 @@ function __init(){
     + '</div>'
     + '</div>'
     + '</div>'
-
-    /*
-    + '<div class="modal bd-example-modal-lg fade" id="__commentModal" tabindex="-1" role="dialog" aria-labbelledby="commentModal" aria-hidden="true">'
-    + '<div class="modal-dialog modal-dialog-centered modal-lg">'
-    + '<div class="modal-content">'
-    + '<div class="modal-header">'
-    + '<h4 class="modal-title" id="__commentModalLabel">' + __r[__OPTION.lang].dialog_comment_title + '</h4>'
-    + '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-    + '<span aria-hidden="true">&times;</span>'
-    + '</button>'
-    + '</div>'
-    + '<div class="modal-body" id="__commentmodal-body">'
-    + '<textarea class="form-control" id="__comment" value=""></textarea>'
-    + '</div>'
-    + '<div class="modal-footer btn-center">'
-    + '<button type="button" class="btn btn-primary modal_button" data-dismiss="modal">OK</button>'
-    + '</div>'
-    + '</div>'
-    + '</div>'
-    + '</div>'
-
-    + '<div class="modal bd-example-modal-lg fade" id="__qrcodeModal" tabindex="-1" role="dialog" aria-labbelledby="__qrcodeModal" aria-hidden="true">'
-    + '  <div class="modal-dialog modal-dialog-centered modal-lg">'
-    + '    <div class="modal-content">'
-    + '      <div class="modal-header">'
-    + '        <h4 class="modal-title" id="__qrcodeModalLabel">' + __r[__OPTION.lang].dialog_qrcode_title + '</h4>'
-    + '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-    + '          <span aria-hidden="true">&times;</span>'
-    + '        </button>'
-    + '      </div>'
-    + '      <div class="modal-body" id="__qrcodemodal-body">'
-    + '        <img id="__qrcode_img" width="90%"/>'
-    + '        <div id="__qrcode_img_" width="100%"></div>'
-    + '      </div>'
-    + '      <div class="modal-footer btn-center">'
-    + '      </div>'
-    + '    </div>'
-    + '  </div>'
-    + '</div>'
-
-    + '<div class="modal bd-example-modal-lg fade" id="__historyModal" tabindex="-1" role="dialog" aria-labbelledby="historyModal" aria-hidden="true">'
-    + '  <div class="modal-dialog modal-dialog-centered modal-lg">'
-    + '    <div class="modal-content">'
-    + '      <div class="modal-header">'
-    + '        <h4 class="modal-title copy_btn" data-clipboard-text="" id="__historyModalLabel">' + __r[__OPTION.lang].dialog_history_title + '</h4>'
-    + '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-    + '          <span aria-hidden="true">&times;</span>'
-    + '        </button>'
-    + '      </div>'
-    + '      <div class="modal-body" id="__historymodal-body">'
-    + '        <div id="__mycarousel" class="slick-box">'
-    + '        </div>'
-    + '      </div>'
-    + '    </div>'
-    + '  </div>'
-    + '</div>'
-
-    + '<div class="modal bd-example-modal-lg fade" id="__extraModal" tabindex="-1" role="dialog" aria-labbelledby="extraModal" aria-hidden="true">'
-    + '  <div class="modal-dialog modal-dialog-centered modal-lg">'
-    + '    <div class="modal-content">'
-    + '      <div class="modal-header">'
-    + '        <h4 class="modal-title copy_btn" data-clipboard-text="" id="__extraModalLabel">' + __r[__OPTION.lang].dialog_extra_title + '</h4>'
-    + '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-    + '          <span aria-hidden="true">&times;</span>'
-    + '        </button>'
-    + '      </div>'
-    + '      <div class="modal-body" id="__extramodal-body">'
-    + '      </div>'
-    + '    </div>'
-    + '  </div>'
-    + '</div>'
-    */
 
     + '<div class="hide">'
     + '  <canvas id="__canvas" width="32" height="32"></canvas>'
