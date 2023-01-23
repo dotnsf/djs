@@ -537,6 +537,7 @@ function __super_resized(){
 };
 
 function __resetCanvas( __no_reset_unredo ){
+  console.log( '__resetCanvas()' );
   //__init();
   __super_resized();
 
@@ -598,7 +599,6 @@ function __setBG(){
 };
 
 function __redrawCanvas(){
-  console.log( '__redrawCanvas()' );
   if( __undos && __undos.length >= 0 ){
     __resetCanvas( true );
 
