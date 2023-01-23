@@ -526,6 +526,7 @@ function __getImage(){
 };
 
 function __super_resized(){
+  console.log( '__super_resized()' );
   var __browserWidth = window.innerWidth;
   var __browserHeight = window.innerHeight;
   var __canvas = document.getElementById( '__mycanvas' );
