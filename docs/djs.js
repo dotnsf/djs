@@ -598,6 +598,7 @@ function __setBG(){
 };
 
 function __redrawCanvas(){
+  console.log( '__redrawCanvas()' );
   if( __undos && __undos.length >= 0 ){
     __resetCanvas( true );
 
