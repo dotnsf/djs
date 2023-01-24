@@ -460,6 +460,13 @@ function __init(){
     ///__super_resized();
     //__resized();  //. undefined
   });
+
+  if( __canvas && __canvas.getContext ){
+    var browserWidth = window.innerWidth;
+    var browserHeight = window.innerHeight;
+    __canvas.width = browserWidth * 0.8;
+    __canvas.height = browserHeight * 0.6;
+  }
 }
 
 

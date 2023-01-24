@@ -6,6 +6,11 @@
 Distributable Doodle.JS
 
 
+## Sample
+
+[Sample](https://dotnsf.github.io/djs/)
+
+
 ## Usage
 
 ```
@@ -14,11 +19,16 @@ Distributable Doodle.JS
 </div>
   :
 
+<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script>
 <script src="https://dotnsf.github.io/djs/djs.js"></script>
 <script>
-var djs = $('#djs_main').doodlejs({});
-//djs.__proto__.__sendImage = sendImage;        //. sendImage を上書き
-//djs.__proto__.__submitCanvas = submitCanvas;  //. submitCanvas を上書き
+$(function(){
+  var djs = $('#djs_main').doodlejs({});
+  //djs.__proto__.__sendImage = sendImage;        //. sendImage を上書き
+  //djs.__proto__.__submitCanvas = submitCanvas;  //. submitCanvas を上書き
+});
 
 function sendImage(){
   :
@@ -43,7 +53,7 @@ function submitCanvas(){
 <script src="https://dotnsf.github.io/djs/djs.js"></script>
 <script>
 //. extra パラメータを付けて実行する（値は true であればなんでもよい）と、
-//. 画面右上にボタンが追加され、タップすると __extraModal ダイアログが表示される
+//. 画面右上にボタンが追加され、タップすると Bootstrap の __extraModal ダイアログが表示される
 var djs = $('#djs_main').doodlejs({ extra: comment });
 </script>
 
