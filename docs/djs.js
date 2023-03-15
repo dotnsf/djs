@@ -2,7 +2,10 @@
 
 //. Language resources
 var __lang = window.navigator.language;
-alert( '__lang : ' + __lang );
+//alert( '__lang : ' + __lang );
+if( __lang == 'ja-JP' ){  //. #1
+  __lang = 'ja';
+}
 if( __lang != 'ja' && __lang != 'en' ){
   __lang = 'en';
 }
