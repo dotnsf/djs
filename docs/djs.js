@@ -2,6 +2,7 @@
 
 //. Language resources
 var __lang = window.navigator.language;
+alert( '__lang : ' + __lang );
 if( __lang != 'ja' && __lang != 'en' ){
   __lang = 'en';
 }
