@@ -609,6 +609,8 @@ function __setBG(){
 
 function __redrawCanvas(){
   if( __undos && __undos.length >= 0 ){
+    //. setBG や undo, redo 時にも来る可能性がある。つまり再編集時に一度でも undo するとここに来てキャンバスはリセットされてしまう
+    //. これを防ぐには再編集時にも画像情報だけでなく stroke 情報を保持していないと無理？だとすると現行の設計からは大きく変わってしまう・・
     __resetCanvas( true );
 
     if( __backgroundcolor ){
@@ -623,6 +625,8 @@ function __redrawCanvas(){
       __ctx.fillStyle = __backgroundcolor; //"rgb( 255, 255, 255 )";
       __ctx.fillRect( 0, 0, __canvas.width, __canvas.height );
       __ctx.stroke();
+    }else{
+      //. #2 背景色が指定されていない場合（再編集時含む）
     }
 
     for( var __i = 0; __i < __undos.length; __i ++ ){
