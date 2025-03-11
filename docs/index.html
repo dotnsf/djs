@@ -8,7 +8,8 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script>
 <link href="//use.fontawesome.com/releases/v5.8.1/css/all.css" rel="stylesheet"/>
 
-<script src="https://dotnsf.github.io/djs/djs.js"></script>
+<!-- <script src="https://dotnsf.github.io/djs/djs.js?disableundo=1"></script> -->
+<script src="/djs.js"></script>
 <script>
 //. プロトタイプ上書き用関数
 function submitCanvas(){
@@ -48,6 +49,15 @@ $(function(){
   //djs.__proto__.__sendImage = sendImage;        //. sendImage を上書き
   //djs.__proto__.__submitCanvas = submitCanvas;  //. submitCanvas を上書き
   //djs.__proto__.__resized = resized;            //. resized を上書き
+
+  //. #3
+  var __disable_undo = djs.__proto__.__getParam( 'disableundo' );
+  console.log( {__disable_undo} );
+  if( __disable_undo ){
+    //. 無条件にアンドゥを無効化するには、無条件にこれを実行すればよい
+    $('#__undo_btn').css( 'display', 'none' );
+    $('#__redo_btn').css( 'display', 'none' );
+  }
 });
 </script>
 

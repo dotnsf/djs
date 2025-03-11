@@ -509,6 +509,22 @@ function __definePrototype(){
       }
     }
   };
+
+  //. #3
+  __THIS.__proto__.__getParam = function( name, url ){
+    if( !url ) url = window.location.search.substring(1);
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var tmp1 = url.split( '&' );
+    var r = null;
+    for( var i = 0; !r && i < tmp1.length; i ++ ){
+      var tmp2 = tmp1[i].split( '=' );
+      if( tmp2.length == 2 && tmp2[0] && tmp2[0] == name ){
+        r = tmp2[1];
+      }
+    }
+
+    return r;
+  };
 };
 
 //. 内部関数
