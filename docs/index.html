@@ -52,11 +52,9 @@ $(function(){
 
   //. #3
   var __disable_undo = djs.__proto__.__getParam( 'disableundo' );
-  console.log( {__disable_undo} );
   if( __disable_undo ){
     //. 無条件にアンドゥを無効化するには、無条件にこれを実行すればよい
-    $('#__undo_btn').css( 'display', 'none' );
-    $('#__redo_btn').css( 'display', 'none' );
+    djs.__proto__.__disableUndoRedo();
   }
 });
 </script>

@@ -525,6 +525,16 @@ function __definePrototype(){
 
     return r;
   };
+
+  __THIS.__proto__.__disableUndoRedo = function(){
+    $('#__undo_btn').css( 'display', 'none' );
+    $('#__redo_btn').css( 'display', 'none' );
+  };
+
+  __THIS.__proto__.__enableUndoRedo = function(){
+    $('#__undo_btn').css( 'display', 'block' );
+    $('#__redo_btn').css( 'display', 'block' );
+  };
 };
 
 //. 内部関数
