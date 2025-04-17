@@ -151,8 +151,8 @@ function __init(){
     + '<div id="__canvas_div">'
     + '<div id="__cdiv"><canvas width="80%" height="50%" id="__mycanvas"></canvas></div>'
     + '<input type="button" class="btn btn-xs" id="__undo_btn" value="<" onClick="__undo();" disabled="disabled"/>'
-    + '<input type="button" class="btn btn-xs id="__reset_btn" btn-warning" value="' + __r[__OPTION.lang].btn_reset + '" onClick="__resetCanvas();"/>'
-    + '<input type="button" class="btn btn-xs id="__submit_btn" btn-primary" value="' + __r[__OPTION.lang].btn_submit + '" onClick="__THIS.__submitCanvas();"/>'
+    + '<input type="button" id="__reset_btn" class="btn btn-xs btn-warning" value="' + __r[__OPTION.lang].btn_reset + '" onClick="__resetCanvas();"/>'
+    + '<input type="button" id="__submit_btn" class="btn btn-xs btn-primary" value="' + __r[__OPTION.lang].btn_submit + '" onClick="__THIS.__submitCanvas();"/>'
     + '<input type="button" class="btn btn-xs" id="__redo_btn" value=">" onClick="__redo();" disabled="disabled"/>'
     + '</div>'
 
