@@ -579,7 +579,7 @@ function __resetCanvas( __no_reset_unredo ){
   if( !__no_reset_unredo ){
     __undos = [];
     __redos = [];
-    __backgroundcolor = null;
+    __backgroundcolor = 'white'; //null;
 
     //. リセットを通知
     if( typeof __THIS.__sendImage != 'undefined' ){
