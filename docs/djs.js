@@ -82,7 +82,7 @@ var __base_url = location.origin + '/';
 var __undos = [];
 var __redos = [];
 var __stroke = null; //. { color: color, width: width, xys: [] }
-var __backgroundcolor = null;
+var __backgroundcolor = 'white'; //null;
 var __custom_color = '#000000';
 
 $.fn.doodlejs = function( option ){
