@@ -23,7 +23,9 @@ var __r = {
     'color_orange': '橙',
     'color_cyan': '空色',
     'color_magenta': '紫',
+    'color_darkgray': '濃グレー',
     'color_gray': 'グレー',
+    'color_lightgray': '淡グレー',
     'color_pink': 'ピンク',
     'color_beige': '肌',
     'color_brown': '茶',
@@ -53,7 +55,9 @@ var __r = {
     'color_orange': 'Orange',
     'color_cyan': 'Cyan',
     'color_magenta': 'Magenta',
+    'color_darkgray': 'DarkGray',
     'color_gray': 'Gray',
+    'color_lightgray': 'LightGray',
     'color_pink': 'Pink',
     'color_beige': 'Beige',
     'color_brown': 'Brown',
@@ -114,7 +118,9 @@ function __init(){
     + '<option style="color:#ffa500;" value="#ffa500">' + __r[__OPTION.lang].color_orange + '</option>'
     + '<option style="color:cyan;" value="cyan">' + __r[__OPTION.lang].color_cyan + '</option>'
     + '<option style="color:magenta;" value="magenta">' + __r[__OPTION.lang].color_magenta + '</option>'
+    + '<option style="color:dimgray;" value="#696969">' + __r[__OPTION.lang].color_darkgray + '</option>'
     + '<option style="color:gray;" value="gray">' + __r[__OPTION.lang].color_gray + '</option>'
+    + '<option style="color:darkgray;" value="#a9a9a9">' + __r[__OPTION.lang].color_lightgray + '</option>'
     + '<option style="color:#ef8f9c;" value="#ef8f9c">' + __r[__OPTION.lang].color_pink + '</option>'
     + '<option style="color:#ead2ad;" value="#ead2ad">' + __r[__OPTION.lang].color_beige + '</option>'
     + '<option style="color:#7c6035;" value="#7c6035">' + __r[__OPTION.lang].color_brown + '</option>'
