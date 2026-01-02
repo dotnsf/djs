@@ -541,6 +541,10 @@ function __definePrototype(){
     $('#__undo_btn').css( 'display', 'block' );
     $('#__redo_btn').css( 'display', 'block' );
   };
+
+  __THIS.__proto__.__setCustomColor = function( c ){
+    __custom_color = c;
+  };
 };
 
 //. 内部関数
