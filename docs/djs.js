@@ -544,6 +544,7 @@ function __definePrototype(){
 
   __THIS.__proto__.__setCustomColor = function( c ){
     __custom_color = c;
+    $('#__color-picker').val( c );
   };
 };
 
