@@ -148,9 +148,8 @@ function __init(){
     + '<option value="18">18</option>'
     + '<option value="19">19</option>'
     + '<option value="20">20</option>'
+    + '<option value="fill">Fill</option>'
     + '</select>'
-
-    + '<input type="button" class="btn btn-xs btn-secondary p-0" id="__setbg_btn" value="' + __r[__OPTION.lang].btn_setbg + '" onClick="__setBG();"/>'
 
     + ( __OPTION && __OPTION.extra ? '<a href="#" class="btn btn-xs btn-secondary p-0" data-toggle="modal" data-target="#__extraModal" id="__extra_btn"><i class="fas fa-comment-dots"></i></a>' : '' )
 
@@ -238,6 +237,24 @@ function __init(){
 
   //. 共通：描画開始処理
   function __drawStart( x, y ){
+    var __linewidth = $('#__select_linewidth').val();
+
+    //. Fill モード：フラッドフィルを即時実行してストロークとして記録
+    if( __linewidth === 'fill' ){
+      var __fillColor = $('#__select_color').val();
+      if( __fillColor === 'custom' ){ __fillColor = __custom_color; }
+      if( __fillColor !== 'transparent' ){
+        var __fillStroke = { color: __fillColor, width: 'fill', xys: [ [ Math.round(x), Math.round(y) ] ] };
+        __floodFill( __canvas, __ctx, Math.round(x), Math.round(y), __fillColor );
+        __undos.push( __fillStroke );
+        $('#__undo_btn').prop( 'disabled', false );
+        __redos = [];
+        $('#__redo_btn').prop( 'disabled', true );
+        if( typeof __THIS.__sendImage != 'undefined' ){ __THIS.__sendImage(); }
+      }
+      return;
+    }
+
     __mouse.isDrawing = true;
     __mouse.startX = x;
     __mouse.startY = y;
@@ -247,7 +264,7 @@ function __init(){
     __stroke = {};
     __stroke.color = $('#__select_color').val();
     if( __stroke.color == 'custom' ){ __stroke.color = __custom_color; }
-    __stroke.width = parseInt( $('#__select_linewidth').val() );
+    __stroke.width = parseInt( __linewidth );
     __stroke.xys = [ [ x, y ] ];
   }
 
@@ -321,7 +338,6 @@ function __init(){
       }
       $(this).css( { 'color': __color } );
       $('#__select_linewidth').css( { 'color': __color } );
-      $('#__setbg_btn').css( { 'background': __color } );
     }
   });
 
@@ -537,16 +553,22 @@ function __redrawCanvas(){
     for( var __i = 0; __i < __undos.length; __i ++ ){
       var __stroke = __undos[__i];
       var __color = __stroke.color;
-      __ctx.globalCompositeOperation = ( __color == 'transparent' ) ? 'destination-out' : 'source-over';
-      __ctx.lineWidth = __stroke.width;
-      __ctx.lineCap = 'round';
-      if( __color != 'transparent' ){ __ctx.strokeStyle = __color; }
 
-      for( var __j = 1; __j < __stroke.xys.length; __j ++ ){
-        __ctx.beginPath();
-        __ctx.moveTo( __stroke.xys[__j-1][0], __stroke.xys[__j-1][1] );
-        __ctx.lineTo( __stroke.xys[__j][0], __stroke.xys[__j][1] );
-        __ctx.stroke();
+      if( __stroke.width === 'fill' ){
+        //. Fill ストロークはフラッドフィルで再描画
+        __floodFill( __canvas, __ctx, __stroke.xys[0][0], __stroke.xys[0][1], __color );
+      }else{
+        __ctx.globalCompositeOperation = ( __color == 'transparent' ) ? 'destination-out' : 'source-over';
+        __ctx.lineWidth = __stroke.width;
+        __ctx.lineCap = 'round';
+        if( __color != 'transparent' ){ __ctx.strokeStyle = __color; }
+
+        for( var __j = 1; __j < __stroke.xys.length; __j ++ ){
+          __ctx.beginPath();
+          __ctx.moveTo( __stroke.xys[__j-1][0], __stroke.xys[__j-1][1] );
+          __ctx.lineTo( __stroke.xys[__j][0], __stroke.xys[__j][1] );
+          __ctx.stroke();
+        }
       }
     }
   }
@@ -562,7 +584,69 @@ function __changeColor( __c ){
   __custom_color = __c;
 
   $('#__select_linewidth').css( { 'color': __c } );
-  $('#__setbg_btn').css( { 'background': __c } );
+};
+
+//. BFS フラッドフィル
+function __floodFill( __canvas, __ctx, __startX, __startY, __fillColor ){
+  var __w = __canvas.width;
+  var __h = __canvas.height;
+  var __imageData = __ctx.getImageData( 0, 0, __w, __h );
+  var __data = __imageData.data;
+
+  //. 塗りつぶし色を RGBA に変換
+  var __tmpCanvas = document.createElement('canvas');
+  __tmpCanvas.width = 1; __tmpCanvas.height = 1;
+  var __tmpCtx = __tmpCanvas.getContext('2d');
+  __tmpCtx.fillStyle = __fillColor;
+  __tmpCtx.fillRect( 0, 0, 1, 1 );
+  var __fillRGBA = __tmpCtx.getImageData( 0, 0, 1, 1 ).data;
+  var __fillR = __fillRGBA[0], __fillG = __fillRGBA[1], __fillB = __fillRGBA[2], __fillA = __fillRGBA[3];
+
+  //. クリック地点の色を取得
+  var __idx = ( __startY * __w + __startX ) * 4;
+  var __targetR = __data[__idx], __targetG = __data[__idx+1], __targetB = __data[__idx+2], __targetA = __data[__idx+3];
+
+  //. 塗りつぶし色と対象色が同じなら何もしない
+  if( __targetR === __fillR && __targetG === __fillG && __targetB === __fillB && __targetA === __fillA ){ return; }
+
+  function __sameAsTarget( i ){
+    return __data[i] === __targetR && __data[i+1] === __targetG && __data[i+2] === __targetB && __data[i+3] === __targetA;
+  }
+  function __setFill( i ){
+    __data[i] = __fillR; __data[i+1] = __fillG; __data[i+2] = __fillB; __data[i+3] = __fillA;
+  }
+
+  //. BFS
+  var __queue = [ __startX + __startY * __w ];
+  var __visited = new Uint8Array( __w * __h );
+  __visited[ __startX + __startY * __w ] = 1;
+
+  while( __queue.length > 0 ){
+    var __pos = __queue.shift();
+    var __px = __pos % __w;
+    var __py = Math.floor( __pos / __w );
+    var __i = __pos * 4;
+    __setFill( __i );
+
+    var __neighbors = [
+      [ __px - 1, __py ],
+      [ __px + 1, __py ],
+      [ __px, __py - 1 ],
+      [ __px, __py + 1 ]
+    ];
+    for( var __n = 0; __n < __neighbors.length; __n ++ ){
+      var __nx = __neighbors[__n][0], __ny = __neighbors[__n][1];
+      if( __nx < 0 || __nx >= __w || __ny < 0 || __ny >= __h ){ continue; }
+      var __npos = __nx + __ny * __w;
+      if( __visited[__npos] ){ continue; }
+      var __ni = __npos * 4;
+      if( !__sameAsTarget( __ni ) ){ continue; }
+      __visited[__npos] = 1;
+      __queue.push( __npos );
+    }
+  }
+
+  __ctx.putImageData( __imageData, 0, 0 );
 };
 
 function __openColorModal(){
