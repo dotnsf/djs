@@ -212,62 +212,51 @@ function __init(){
     isDrawing: false
   };
   var __borderWidth = 1;
-  __canvas.addEventListener( "mousemove", function( e ){
-    //. マウスが動いたら座標値を取得
-    var __rect = e.target.getBoundingClientRect();
-    __mouse.x = e.clientX - __rect.left - __borderWidth;
-    __mouse.y = e.clientY - __rect.top - __borderWidth;
 
-    //. isDrawがtrueのとき描画
-    if( __mouse.isDrawing ){
-      var __color = $('#__select_color').val();
-      if( __color == 'custom' ){
-        __color = __custom_color;
-      }
-      if( __color == 'transparent' ){
-        __ctx.globalCompositeOperation = 'destination-out';
-      }else{
-        __ctx.globalCompositeOperation = 'source-over';
-      }
+  //. 共通：描画移動処理
+  function __drawMove( x, y ){
+    __mouse.x = x;
+    __mouse.y = y;
+    if( !__mouse.isDrawing ){ return; }
 
-      __ctx.beginPath();
-      __ctx.lineWidth = parseInt( $('#__select_linewidth').val() );
-      __ctx.lineCap = 'round';
-      __ctx.moveTo( __mouse.startX, __mouse.startY );
-      __ctx.lineTo( __mouse.x, __mouse.y );
-      if( __color != 'transparent' ){
-        __ctx.strokeStyle = __color;
-      }
-      __ctx.stroke();
-      __mouse.startX = __mouse.x;
-      __mouse.startY = __mouse.y;
+    var __color = $('#__select_color').val();
+    if( __color == 'custom' ){ __color = __custom_color; }
 
-      if( __stroke ){
-        __stroke.xys.push( [ __mouse.x, __mouse.y ] );
-      }
-    }
-  });
-  //. マウスを押したら、描画OK(myDrawをtrue)
-  __canvas.addEventListener( "mousedown", function( e ){
-    __mouse.isDrawing = true;
+    __ctx.globalCompositeOperation = ( __color == 'transparent' ) ? 'destination-out' : 'source-over';
+    __ctx.beginPath();
+    __ctx.lineWidth = parseInt( $('#__select_linewidth').val() );
+    __ctx.lineCap = 'round';
+    __ctx.moveTo( __mouse.startX, __mouse.startY );
+    __ctx.lineTo( __mouse.x, __mouse.y );
+    if( __color != 'transparent' ){ __ctx.strokeStyle = __color; }
+    __ctx.stroke();
     __mouse.startX = __mouse.x;
     __mouse.startY = __mouse.y;
 
+    if( __stroke ){ __stroke.xys.push( [ __mouse.x, __mouse.y ] ); }
+  }
+
+  //. 共通：描画開始処理
+  function __drawStart( x, y ){
+    __mouse.isDrawing = true;
+    __mouse.startX = x;
+    __mouse.startY = y;
+    __mouse.x = x;
+    __mouse.y = y;
+
     __stroke = {};
     __stroke.color = $('#__select_color').val();
-    if( __stroke.color == 'custom' ){
-      __stroke.color = __custom_color;
-    }
+    if( __stroke.color == 'custom' ){ __stroke.color = __custom_color; }
     __stroke.width = parseInt( $('#__select_linewidth').val() );
-    __stroke.xys = [ [ __mouse.x, __mouse.y ] ];
-  });
-  //. マウスを上げたら、描画禁止(myDrawをfalse)
-  __canvas.addEventListener( "mouseup", function( e ){
+    __stroke.xys = [ [ x, y ] ];
+  }
+
+  //. 共通：描画終了処理
+  function __drawEnd(){
     __mouse.isDrawing = false;
     if( typeof __THIS.__sendImage != 'undefined' ){
       __THIS.__sendImage();
     }
-
     if( __stroke ){
       __undos.push( __stroke );
       $('#__undo_btn').prop( 'disabled', false );
@@ -275,169 +264,49 @@ function __init(){
       __redos = [];
       $('#__redo_btn').prop( 'disabled', true );
     }
-  });
-  __canvas.addEventListener( 'mouseleave', function( e ){
-    __mouse.isDrawing = false;
+  }
 
-    if( __stroke ){
-      __undos.push( __stroke );
-      $('#__undo_btn').prop( 'disabled', false );
-      __stroke = null;
-      __redos = [];
-      $('#__redo_btn').prop( 'disabled', true );
-    }
+  //. Mouse Events
+  __canvas.addEventListener( "mousemove", function( e ){
+    var __rect = e.target.getBoundingClientRect();
+    __drawMove( e.clientX - __rect.left - __borderWidth, e.clientY - __rect.top - __borderWidth );
+  });
+  __canvas.addEventListener( "mousedown", function( e ){
+    __drawStart( __mouse.x, __mouse.y );
+  });
+  __canvas.addEventListener( "mouseup",    function( e ){ __drawEnd(); });
+  __canvas.addEventListener( "mouseleave", function( e ){
+    if( __mouse.isDrawing ){ __drawEnd(); }
   });
 
+  //. Touch Events
   __canvas.addEventListener( "touchmove", function( e ){
-    //. タッチが動いたら座標値を取得
     var __t = e.changedTouches[0];
     var __rect = e.target.getBoundingClientRect();
-    __mouse.x = ( __isAndroid() ? __t.pageX : e.pageX ) - __rect.left - __borderWidth;
-    __mouse.y = ( __isAndroid() ? __t.pageY : e.pageY ) - __rect.top - __borderWidth;
-
-    //. isDrawがtrueのとき描画
-    if( __mouse.isDrawing ){
-      var __color = $('#__select_color').val();
-      if( __color == 'custom' ){
-        __color = __custom_color;
-      }
-      if( __color == 'transparent' ){
-        __ctx.globalCompositeOperation = 'destination-out';
-      }else{
-        __ctx.globalCompositeOperation = 'source-over';
-      }
-
-      __ctx.beginPath();
-      __ctx.lineWidth = parseInt( $('#__select_linewidth').val() );
-      __ctx.lineCap = 'round';
-      __ctx.moveTo( __mouse.startX, __mouse.startY );
-      __ctx.lineTo( __mouse.x, __mouse.y );
-      if( __color != 'transparent' ){
-        __ctx.strokeStyle = __color;
-      }
-      __ctx.stroke();
-      __mouse.startX = __mouse.x;
-      __mouse.startY = __mouse.y;
-
-      if( __stroke ){
-        __stroke.xys.push( [ __mouse.x, __mouse.y ] );
-      }
-    }
+    var __x = ( __isAndroid() ? __t.pageX : e.pageX ) - __rect.left - __borderWidth;
+    var __y = ( __isAndroid() ? __t.pageY : e.pageY ) - __rect.top - __borderWidth;
+    __drawMove( __x, __y );
   });
-  //. タッチしたら、描画OK(myDrawをtrue)
   __canvas.addEventListener( "touchstart", function( e ){
     var __t = e.changedTouches[0];
     var __rect = __t.target.getBoundingClientRect();
-    __mouse.isDrawing = true;
-    __mouse.startX = __t.pageX - __rect.left - __borderWidth;
-    __mouse.startY = __t.pageY - __rect.top - __borderWidth;
-
-    __stroke = {};
-    __stroke.color = $('#__select_color').val();
-    if( __stroke.color == 'custom' ){
-      __stroke.color = __custom_color;
-    }
-    __stroke.width = parseInt( $('#__select_linewidth').val() );
-    __stroke.xys = [ [ __mouse.startX, __mouse.startY ] ];
+    __drawStart( __t.pageX - __rect.left - __borderWidth, __t.pageY - __rect.top - __borderWidth );
   });
-  //. タッチを上げたら、描画禁止(myDrawをfalse)
-  __canvas.addEventListener( "touchend", function( e ){
-    __mouse.isDrawing = false;
-    if( typeof __THIS.__sendImage != 'undefined' ){
-      __THIS.__sendImage();
-    }
-
-    if( __stroke ){
-      __undos.push( __stroke );
-      $('#__undo_btn').prop( 'disabled', false );
-      __stroke = null;
-      __redos = [];
-      $('#__redo_btn').prop( 'disabled', true );
-    }
-  });
-  __canvas.addEventListener( 'touchcancel', function( e ){
-    __mouse.isDrawing = false;
-    if( typeof __THIS.__sendImage != 'undefined' ){
-      __THIS.__sendImage();
-    }
-
-    if( __stroke ){
-      __undos.push( __stroke );
-      $('#__undo_btn').prop( 'disabled', false );
-      __stroke = null;
-      __redos = [];
-      $('#__redo_btn').prop( 'display', true );
-    }
-  });
+  __canvas.addEventListener( "touchend",    function( e ){ __drawEnd(); });
+  __canvas.addEventListener( "touchcancel", function( e ){ __drawEnd(); });
 
   //. Pointer Events
   __canvas.addEventListener( "pointermove", function( e ){
-    //. ポインターが動いたら座標値を取得
-    var __t = e; //e.changedTouches[0];
     var __rect = e.target.getBoundingClientRect();
-    __mouse.x = ( __isAndroid() ? __t.pageX : e.pageX ) - __rect.left - __borderWidth;
-    __mouse.y = ( __isAndroid() ? __t.pageY : e.pageY ) - __rect.top - __borderWidth;
-
-    //. isDrawがtrueのとき描画
-    if( __mouse.isDrawing ){
-      var __color = $('#__select_color').val();
-      if( __color == 'custom' ){
-        __color = __custom_color;
-      }
-      if( __color == 'transparent' ){
-        __ctx.globalCompositeOperation = 'destination-out';
-      }else{
-        __ctx.globalCompositeOperation = 'source-over';
-      }
-
-      __ctx.beginPath();
-      __ctx.lineWidth = parseInt( $('#__select_linewidth').val() );
-      __ctx.lineCap = 'round';
-      __ctx.moveTo( __mouse.startX, __mouse.startY );
-      __ctx.lineTo( __mouse.x, __mouse.y );
-      if( __color != 'transparent' ){
-        __ctx.strokeStyle = __color;
-      }
-      __ctx.stroke();
-      __mouse.startX = __mouse.x;
-      __mouse.startY = __mouse.y;
-
-      if( __stroke ){
-        __stroke.xys.push( [ __mouse.x, __mouse.y ] );
-      }
-    }
+    var __x = ( __isAndroid() ? e.pageX : e.pageX ) - __rect.left - __borderWidth;
+    var __y = ( __isAndroid() ? e.pageY : e.pageY ) - __rect.top - __borderWidth;
+    __drawMove( __x, __y );
   });
-  //. ポインターにタッチしたら、描画OK(myDrawをtrue)
   __canvas.addEventListener( "pointerdown", function( e ){
-    var __t = e; //e.changedTouches[0];
-    var __rect = __t.target.getBoundingClientRect();
-    __mouse.isDrawing = true;
-    __mouse.startX = __t.pageX - __rect.left - __borderWidth;
-    __mouse.startY = __t.pageY - __rect.top - __borderWidth;
-
-    __stroke = {};
-    __stroke.color = $('#__select_color').val();
-    if( __stroke.color == 'custom' ){
-      __stroke.color = __custom_color;
-    }
-    __stroke.width = parseInt( $('#__select_linewidth').val() );
-    __stroke.xys = [ [ __mouse.startX, __mouse.startY ] ];
+    var __rect = e.target.getBoundingClientRect();
+    __drawStart( e.pageX - __rect.left - __borderWidth, e.pageY - __rect.top - __borderWidth );
   });
-  //. ポインターを上げたら、描画禁止(myDrawをfalse)
-  __canvas.addEventListener( "pointerup", function( e ){
-    __mouse.isDrawing = false;
-    if( typeof __THIS.__sendImage != 'undefined' ){
-      __THIS.__sendImage();
-    }
-
-    if( __stroke ){
-      __undos.push( __stroke );
-      $('#__undo_btn').prop( 'disabled', false );
-      __stroke = null;
-      __redos = [];
-      $('#__redo_btn').prop( 'disabled', true );
-    }
-  });
+  __canvas.addEventListener( "pointerup", function( e ){ __drawEnd(); });
 
   //. 内部処理
   $('#__select_color').change( function(){
@@ -650,47 +519,33 @@ function __redrawCanvas(){
     //. これを防ぐには再編集時にも画像情報だけでなく stroke 情報を保持していないと無理？だとすると現行の設計からは大きく変わってしまう・・
     __resetCanvas( true );
 
-    if( __backgroundcolor ){
-      var __canvas = document.getElementById( '__mycanvas' );
-      if( !__canvas || !__canvas.getContext ){
-        return false;
-      }
-      var __ctx = __canvas.getContext( '2d' );
+    var __canvas = document.getElementById( '__mycanvas' );
+    if( !__canvas || !__canvas.getContext ){
+      return false;
+    }
+    var __ctx = __canvas.getContext( '2d' );
 
+    if( __backgroundcolor ){
       //. 全体をベタ塗り
       __ctx.beginPath();
-      __ctx.fillStyle = __backgroundcolor; //"rgb( 255, 255, 255 )";
+      __ctx.fillStyle = __backgroundcolor;
       __ctx.fillRect( 0, 0, __canvas.width, __canvas.height );
       __ctx.stroke();
-    }else{
-      //. #2 背景色が指定されていない場合（再編集時含む）
     }
+    //. #2 背景色が指定されていない場合（再編集時含む）は何もしない
 
     for( var __i = 0; __i < __undos.length; __i ++ ){
       var __stroke = __undos[__i];
+      var __color = __stroke.color;
+      __ctx.globalCompositeOperation = ( __color == 'transparent' ) ? 'destination-out' : 'source-over';
+      __ctx.lineWidth = __stroke.width;
+      __ctx.lineCap = 'round';
+      if( __color != 'transparent' ){ __ctx.strokeStyle = __color; }
 
       for( var __j = 1; __j < __stroke.xys.length; __j ++ ){
-        var __canvas = document.getElementById( '__mycanvas' );
-        if( !__canvas || !__canvas.getContext ){
-          return false;
-        }
-        var __ctx = __canvas.getContext( '2d' );
-
-        var __color = __stroke.color;
-        if( __color == 'transparent' ){
-          __ctx.globalCompositeOperation = 'destination-out';
-        }else{
-          __ctx.globalCompositeOperation = 'source-over';
-        }
-
         __ctx.beginPath();
-        __ctx.lineWidth = __stroke.width;
-        __ctx.lineCap = 'round';
         __ctx.moveTo( __stroke.xys[__j-1][0], __stroke.xys[__j-1][1] );
         __ctx.lineTo( __stroke.xys[__j][0], __stroke.xys[__j][1] );
-        if( __color != 'transparent' ){
-          __ctx.strokeStyle = __color;
-        }
         __ctx.stroke();
       }
     }
